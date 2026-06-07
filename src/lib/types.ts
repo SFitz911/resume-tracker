@@ -6,6 +6,14 @@ export type ClassificationType =
   | 'ats_or_recruiting_software'
   | 'unknown';
 
+export type FollowUpStatus =
+  | 'none'
+  | 'pending'
+  | 'followed_up'
+  | 'replied'
+  | 'rejected'
+  | 'offer';
+
 export interface TrackingEvent {
   id: string;
   timestamp: string;
@@ -13,6 +21,7 @@ export interface TrackingEvent {
   campaignName: string;
   company: string;
   recipient: string;
+  recipientEmail?: string;
   resumeVersion: string;
   visitorIp: string;
   userAgent: string;
@@ -30,6 +39,7 @@ export interface Campaign {
   name: string;
   company: string;
   recipient: string;
+  recipientEmail: string;
   resumeVersion: string;
   status: 'active' | 'paused' | 'completed';
   createdAt: string;
@@ -44,8 +54,12 @@ export interface Company {
   id: string;
   name: string;
   recruiterName: string;
+  recruiterEmail: string;
   jobTitle: string;
   lastActivity: string;
+  sentAt: string;
+  followUpStatus: FollowUpStatus;
+  notes: string;
   totalOpens: number;
   humanOpens: number;
   botOpens: number;

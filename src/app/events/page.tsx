@@ -19,6 +19,7 @@ export default function EventsPage() {
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Campaign</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Company</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Recipient</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Version</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">User Agent</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Referrer</th>
@@ -37,6 +38,12 @@ export default function EventsPage() {
                     {event.campaignName}
                   </td>
                   <td className="px-4 py-3 text-xs text-gray-600">{event.company}</td>
+                  <td className="px-4 py-3 text-xs text-gray-600">
+                    <div>{event.recipient}</div>
+                    {event.recipientEmail && (
+                      <div className="text-gray-400">{event.recipientEmail}</div>
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-xs text-gray-600">{event.resumeVersion}</td>
                   <td className="px-4 py-3 text-xs text-gray-500 max-w-[200px] truncate">
                     {event.userAgent}

@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTheme } from '@/components/ThemeProvider';
 
 const navItems = [
   { href: '/', label: 'Home', icon: '🏠' },
   { href: '/dashboard', label: 'Dashboard', icon: '📊' },
   { href: '/campaigns', label: 'Campaigns', icon: '🎯' },
-  { href: '/generator', label: 'Generator' },
+  { href: '/generator', label: 'Generator', icon: '🔗' },
   { href: '/companies', label: 'Companies', icon: '🏢' },
   { href: '/events', label: 'Events', icon: '📋' },
   { href: '/resumes', label: 'Resumes', icon: '📄' },
@@ -17,6 +18,7 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white">
@@ -44,7 +46,10 @@ export function Sidebar() {
           })}
         </nav>
         <div className="border-t border-gray-200 p-4">
-          <p className="text-xs text-gray-400">Resume Tracker MVP</p>
+          <button onClick={toggleTheme} className="theme-toggle w-full">
+            {theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode'}
+          </button>
+          <p className="mt-3 text-xs text-gray-400">Resume Tracker MVP</p>
           <p className="text-xs text-gray-400">Signals, not proof.</p>
         </div>
       </div>
