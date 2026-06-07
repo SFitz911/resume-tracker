@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { sampleResumeVersions } from '@/lib/sample-data';
 
 export default function ResumesPage() {
@@ -10,9 +11,12 @@ export default function ResumesPage() {
             Compare performance across resume versions
           </p>
         </div>
-        <button className="rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-gray-800">
+        <Link
+          href="/generator"
+          className="rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-gray-800"
+        >
           + New Version
-        </button>
+        </Link>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

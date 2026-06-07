@@ -13,9 +13,10 @@ export default function SettingsPage() {
           <h2 className="text-lg font-semibold text-gray-900">Owner Profile</h2>
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <label htmlFor="owner-email" className="block text-sm font-medium text-gray-700">Email</label>
               <input
                 type="email"
+                id="owner-email"
                 defaultValue="owner@example.com"
                 disabled
                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-gray-50 text-gray-500"
@@ -23,9 +24,10 @@ export default function SettingsPage() {
               <p className="mt-1 text-xs text-gray-400">Set via OWNER_EMAIL environment variable</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Default Resume Version</label>
+              <label htmlFor="resume-version" className="block text-sm font-medium text-gray-700">Default Resume Version</label>
               <input
                 type="text"
+                id="resume-version"
                 defaultValue="v2.1-frontend"
                 disabled
                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-gray-50 text-gray-500"
@@ -38,9 +40,10 @@ export default function SettingsPage() {
           <h2 className="text-lg font-semibold text-gray-900">App Configuration</h2>
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">App URL / Domain</label>
+              <label htmlFor="app-url" className="block text-sm font-medium text-gray-700">App URL / Domain</label>
               <input
                 type="url"
+                id="app-url"
                 defaultValue="https://your-app.vercel.app"
                 disabled
                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-gray-50 text-gray-500"

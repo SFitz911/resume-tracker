@@ -7,6 +7,7 @@ const navItems = [
   { href: '/', label: 'Home', icon: '🏠' },
   { href: '/dashboard', label: 'Dashboard', icon: '📊' },
   { href: '/campaigns', label: 'Campaigns', icon: '🎯' },
+  { href: '/generator', label: 'Generator' },
   { href: '/companies', label: 'Companies', icon: '🏢' },
   { href: '/events', label: 'Events', icon: '📋' },
   { href: '/resumes', label: 'Resumes', icon: '📄' },

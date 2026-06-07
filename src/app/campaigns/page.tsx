@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { sampleCampaigns } from '@/lib/sample-data';
 import { StatusBadge } from '@/components/ui/Badge';
 
@@ -11,9 +12,12 @@ export default function CampaignsPage() {
             Track resume sends and generate pixel URLs
           </p>
         </div>
-        <button className="rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-gray-800">
+        <Link
+          href="/generator"
+          className="rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-gray-800"
+        >
           + New Campaign
-        </button>
+        </Link>
       </div>
 
       <div className="space-y-4">
