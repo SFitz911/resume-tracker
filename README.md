@@ -6,7 +6,7 @@ A personal resume tracking web application. Embed a tiny invisible tracking pixe
 
 - **Timestamp** of each open event
 - **Campaign** (which job application triggered the open)
-- **Company / Recipient** (who you sent the resume to)
+- **Company / Recipient** (who you sent the resume to, including name and email)
 - **Resume Version** (which version of your resume was viewed)
 - **User Agent** (browser/client that loaded the pixel)
 - **Referrer** (where the request came from)
@@ -14,6 +14,61 @@ A personal resume tracking web application. Embed a tiny invisible tracking pixe
 - **Device Hints** (OS, browser, mobile/desktop)
 - **Classification** (likely human, bot, scanner, email proxy, ATS, or unknown)
 - **Confidence Score** (how certain the classification is)
+- **Follow-up Status** (none, pending, followed_up, replied, rejected, offer)
+- **Notes** (personal notes about the application)
+
+## Short Tracked Resume Links
+
+Instead of sharing a long URL with query parameters, you can create clean custom slugs:
+
+```
+https://your-app.vercel.app/r/sean-resume-v2
+https://your-app.vercel.app/r/apex-v2
+https://your-app.vercel.app/r/ai-developer-resume
+```
+
+### How it works
+
+1. In the Generator, enter a **Custom Link Slug** (e.g. `sean-resume-v2`).
+2. The slug is sanitized: lowercased, spaces become hyphens, special characters are removed.
+3. The primary output is a short link like `/r/sean-resume-v2` with no query params.
+4. The full URL with query params is available under an "Advanced" toggle for debugging.
+
+### Two modes
+
+- **With query params:** If the tracked resume page receives query parameters (campaign, company, etc.), it uses them to populate the page. This is the full-data mode.
+- **Without query params (short link only):** If no query params are present, the page uses the slug as the campaign identifier and shows placeholder data. An amber banner explains that production will use a database lookup.
+
+### Production path
+
+In production, the slug should map to a database record containing all campaign metadata. The short link alone (`/r/sean-resume-v2`) would load everything from the database without needing query params at all.
+
+## Resume PDF Support
+
+The tracked resume page can link to an actual PDF file for download.
+
+### How it works
+
+1. Place your resume PDF in `public/resumes/` (e.g. `public/resumes/sean-resume.pdf`).
+2. In the Generator, enter the filename in the "Resume PDF Filename" field.
+3. The generated tracked resume URL includes `resumeFile=sean-resume.pdf`.
+4. When a recruiter visits the tracked page, they see a "Download Resume" button that links to `/resumes/sean-resume.pdf`.
+
+### Limitations
+
+- No upload system yet. Manually place PDFs in `public/resumes/`.
+- Files in `public/` are committed to git and deployed with the app.
+- Keep file sizes reasonable (under 5 MB) for fast downloads.
+
+## Recipient Contact Tracking
+
+The Generator collects recipient name, email, and job title. The Companies page shows full contact details, follow-up status, and notes for each application.
+
+### MVP Mode vs Production Mode
+
+**MVP mode (current):** `recipientName` and `recipientEmail` are included as query parameters in tracking URLs. This is acceptable for a private tracker during testing.
+
+**Production mode (future):** Replace query-parameter recipient data with a generated tracking ID that maps to recipient details in a private database. Never expose recipient email addresses in URLs shared publicly or indexed by search engines.
 
 ## Important Limitations
 
@@ -47,15 +102,20 @@ Always treat data as approximate. Never make hiring decisions or confrontational
 - [x] Bot/scanner detection with six classification categories
 - [x] Dashboard with 9 KPI cards
 - [x] Campaign management with generated pixel URLs
-- [x] Company/recipient tracking table
-- [x] Full event log with classification badges
+- [x] Company/recipient tracking with email, follow-up status, and notes
+- [x] Full event log with classification badges and recipient info
 - [x] Resume version comparison
+- [x] Tracking Link Generator with custom short slugs and recipient contact fields
+- [x] Short tracked resume links (`/r/custom-slug`)
+- [x] Tracked resume page with PDF download support
+- [x] Resume PDF hosting via public/resumes/
 - [x] Settings page with configuration placeholders
 - [x] Placeholder login page (auth not yet wired)
 - [ ] Database persistence (currently using sample data)
 - [ ] Authentication and access control
+- [ ] Slug-to-database lookup for short links
 - [ ] Email notifications on human opens
-- [ ] Real API key / webhook support for campaigns
+- [ ] Replace URL-based recipient params with private tracking IDs
 
 ## How the Tracking Pixel Works
 
@@ -80,9 +140,10 @@ The app includes a full SaaS-style dashboard:
 - **Home** - Welcome page with quick-start instructions
 - **Dashboard** - 9 KPI cards + recent events table
 - **Campaigns** - Create/manage campaigns with generated pixel URLs
-- **Companies** - Track opens by company and recruiter
-- **Events** - Full event log with filtering by classification
+- **Companies** - Track opens by company, recruiter email, follow-up status, and notes
+- **Events** - Full event log with recipient name/email and classification badges
 - **Resumes** - Compare resume version performance
+- **Generator** - Create short tracked links with custom slugs, recipient details, and resume PDF filename
 - **Settings** - Configuration placeholders (owner email, app URL, notifications, privacy, DB status)
 - **Login** - Placeholder auth page (non-functional)
 
@@ -105,6 +166,10 @@ Confidence scores range from 0.50 (unknown) to 0.99 (high-confidence bot match).
 
 ```
 Resume-Tracker/
+├── public/
+│   └── resumes/            # Place resume PDFs here
+│       ├── .gitkeep
+│       └── README.md
 ├── src/
 │   ├── app/
 │   │   ├── api/
@@ -116,6 +181,8 @@ Resume-Tracker/
 │   │   ├── companies/page.tsx      # Companies page
 │   │   ├── events/page.tsx         # Events page
 │   │   ├── resumes/page.tsx        # Resume versions page
+│   │   ├── generator/page.tsx      # Tracking Link Generator
+│   │   ├── r/[slug]/page.tsx       # Tracked resume page (short links)
 │   │   ├── settings/page.tsx       # Settings page
 │   │   ├── login/page.tsx          # Login placeholder
 │   │   ├── page.tsx                # Home page
@@ -174,6 +241,8 @@ Automatic deployments are enabled: every push to `main` triggers a new productio
 - IP addresses are masked (last octet replaced with `x`) to limit personally identifiable information.
 - No cookies are set by the tracking pixel.
 - Data is only accessible to the app owner (single-user design).
+- Recipient email addresses in URLs are for MVP testing only. Production should use opaque tracking IDs.
+- Short link slugs do not expose recipient data by design.
 - This tool is intended for personal job search analytics only.
 - Do not use this to track people without their awareness in contexts where consent is required.
 - Comply with your local privacy regulations (GDPR, CCPA, etc.) if you extend this tool.
@@ -181,9 +250,11 @@ Automatic deployments are enabled: every push to `main` triggers a new productio
 ## Roadmap
 
 1. **Database integration** - Persist events to Vercel Postgres or Supabase
-2. **Authentication** - Protect the dashboard with NextAuth.js or Clerk
-3. **Notifications** - Email alerts on human opens
-4. **Campaign creation UI** - Form to create new campaigns from the dashboard
-5. **Export** - CSV/JSON export of event data
-6. **Webhooks** - Real-time notifications to Slack or Discord
-7. **Advanced analytics** - Time-of-day patterns, geographic estimates, repeat-open tracking
+2. **Slug-to-record lookup** - Short links resolve metadata from database instead of query params
+3. **Authentication** - Protect the dashboard with NextAuth.js or Clerk
+4. **Private tracking IDs** - Replace URL query params with opaque IDs mapped to a database
+5. **Notifications** - Email alerts on human opens
+6. **Resume upload** - Upload PDFs via the dashboard instead of manual file placement
+7. **Export** - CSV/JSON export of event data
+8. **Webhooks** - Real-time notifications to Slack or Discord
+9. **Advanced analytics** - Time-of-day patterns, geographic estimates, repeat-open tracking

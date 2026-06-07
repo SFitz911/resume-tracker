@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /* Dark theme styles */
 .dark {
   color-scheme: dark;
